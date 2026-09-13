@@ -1,6 +1,11 @@
+/* =================================================================
+   Carta Memoriae - Landing Page Interactions (Redesign)
+   ================================================================= */
+
 (function () {
   'use strict';
 
+  /* Smooth Scroll for Anchor Links */
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
@@ -13,13 +18,18 @@
     });
   });
 
+  /* Nav Shadow on Scroll */
   var nav = document.getElementById('nav');
   function updateNav() {
-    if (window.scrollY > 40) { nav.classList.add('scrolled'); }
-    else { nav.classList.remove('scrolled'); }
+    if (window.scrollY > 40) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
   }
   window.addEventListener('scroll', updateNav, { passive: true });
 
+  /* Subtle Parallax on Hero */
   var heroContent = document.querySelector('.hero__content');
   function parallax() {
     if (!heroContent) return;
@@ -32,6 +42,7 @@
   }
   window.addEventListener('scroll', parallax, { passive: true });
 
+  /* Intersection Observer - Scroll Reveal */
   var revealElements = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {
@@ -41,30 +52,33 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    revealElements.forEach(function (el) { observer.observe(el); });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(function (el) {
+      observer.observe(el);
+    });
   } else {
-    revealElements.forEach(function (el) { el.classList.add('visible'); });
+    revealElements.forEach(function (el) {
+      el.classList.add('visible');
+    });
   }
 
+  /* Terrain Card Touch Support */
   var cards = document.querySelectorAll('.terrain-card');
   var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
   if (isTouchDevice) {
     cards.forEach(function (card) {
       card.addEventListener('click', function () {
-        cards.forEach(function (c) { if (c !== card) c.classList.remove('flipped'); });
+        cards.forEach(function (c) {
+          if (c !== card) c.classList.remove('flipped');
+        });
         card.classList.toggle('flipped');
       });
     });
   }
 
-  var compassImg = document.querySelector('.compass-rose__img');
-  if (compassImg && 'IntersectionObserver' in window) {
-    var compassObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        compassImg.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
-      });
-    }, { threshold: 0 });
-    compassObserver.observe(compassImg);
-  }
 })();
