@@ -1,11 +1,6 @@
-/* ═══════════════════════════════════════════════════════════════
-   Carta Memoriae — Landing Page Interactions
-   ═══════════════════════════════════════════════════════════════ */
-
 (function () {
   'use strict';
 
-  /* ─── Smooth Scroll for Anchor Links ─── */
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
@@ -18,32 +13,25 @@
     });
   });
 
-  /* ─── Nav Shadow on Scroll ─── */
   var nav = document.getElementById('nav');
   function updateNav() {
-    if (window.scrollY > 40) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
-    }
+    if (window.scrollY > 40) { nav.classList.add('scrolled'); }
+    else { nav.classList.remove('scrolled'); }
   }
   window.addEventListener('scroll', updateNav, { passive: true });
 
-  /* ─── Subtle Parallax on Hero ─── */
   var heroContent = document.querySelector('.hero__content');
   function parallax() {
     if (!heroContent) return;
     var scrolled = window.pageYOffset;
     var heroBottom = document.querySelector('.hero').offsetHeight;
     if (scrolled < heroBottom) {
-      /* Move content up slightly as user scrolls */
       heroContent.style.transform = 'translateY(' + (scrolled * 0.18) + 'px)';
       heroContent.style.opacity = Math.max(1 - scrolled / (heroBottom * 0.8), 0);
     }
   }
   window.addEventListener('scroll', parallax, { passive: true });
 
-  /* ─── Intersection Observer — Scroll Reveal ─── */
   var revealElements = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     var observer = new IntersectionObserver(function (entries) {
@@ -53,49 +41,30 @@
           observer.unobserve(entry.target);
         }
       });
-    }, {
-      threshold: 0.12,
-      rootMargin: '0px 0px -40px 0px'
-    });
-
-    revealElements.forEach(function (el) {
-      observer.observe(el);
-    });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealElements.forEach(function (el) { observer.observe(el); });
   } else {
-    /* Fallback — reveal all immediately */
-    revealElements.forEach(function (el) {
-      el.classList.add('visible');
-    });
+    revealElements.forEach(function (el) { el.classList.add('visible'); });
   }
 
-  /* ─── Terrain Card Touch Support ─── */
-  /* On touch devices, tap to flip (hover doesn't work) */
   var cards = document.querySelectorAll('.terrain-card');
   var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
   if (isTouchDevice) {
     cards.forEach(function (card) {
       card.addEventListener('click', function () {
-        /* Close any other open card */
-        cards.forEach(function (c) {
-          if (c !== card) c.classList.remove('flipped');
-        });
+        cards.forEach(function (c) { if (c !== card) c.classList.remove('flipped'); });
         card.classList.toggle('flipped');
       });
     });
   }
 
-  /* ─── Compass Rose Slow Rotation (CSS handles it, but add a
-        play/pause on visibility for performance) ─── */
-  var compassSvg = document.querySelector('.compass-rose__svg');
-  if (compassSvg && 'IntersectionObserver' in window) {
+  var compassImg = document.querySelector('.compass-rose__img');
+  if (compassImg && 'IntersectionObserver' in window) {
     var compassObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        compassSvg.style.animationPlayState =
-          entry.isIntersecting ? 'running' : 'paused';
+        compassImg.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
       });
     }, { threshold: 0 });
-    compassObserver.observe(compassSvg);
+    compassObserver.observe(compassImg);
   }
-
 })();
