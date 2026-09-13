@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    Carta Memoriae — Full Redesign
-   Atmospheric hero, vintage imagery, IM Fell typography
+   Atmospheric hero, vintage imagery, UnifrakturMaguntia & IM Fell typography
    ═══════════════════════════════════════════════════════════════ */
 
 /* ─── Design Tokens ─── */
@@ -11,7 +11,7 @@
   --river:          #5a8fba;
   --forest:         #4A6741;
   --slate:          #6B7C8D;
-  --font-heading:   'IM Fell English SC', serif;
+  --font-heading:   'UnifrakturMaguntia', serif;
   --font-body:      'IM Fell English', serif;
   --max-w:          1140px;
   --section-pad:    5rem 1.5rem;
