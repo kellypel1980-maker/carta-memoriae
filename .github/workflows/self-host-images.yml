@@ -1,0 +1,64 @@
+name: Self-host Carta Memoriae images
+on:
+  workflow_dispatch:
+jobs:
+  self-host-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download images
+        run: |
+          mkdir -p images
+          curl -fsSL "https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/ef6a0f78f2f73b683f041bdffd684a67d170929a7137401cb8bf1079c7adb08c.jpeg" -o images/hero_bg.jpeg
+          curl -fsSL "https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/b58f5b63f29b9751d5706847c66da61217c9d3ec94710fbbd624317c6c0247fd.jpeg" -o images/map.jpeg
+          curl -fsSL "https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/006f1f993f32c9dba44aa75c8c10a5430c2ae72ebb7b95cb70d9fe57445b0fcb.jpeg" -o images/compass.jpeg
+          curl -fsSL "https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/eced1915c43a398f8a4c7699cf6230afa1d42de7b9a325a3b54078dcf8881efb.jpeg" -o images/quill.jpeg
+          curl -fsSL "https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/ff99fdfe02e948f9cced8daa1744150a0fb570305b22b9093488d68459040fc4.jpeg" -o images/mountains.jpeg
+          curl -fsSL "https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/bc645e1e4df425d30c407cf0cf779fac6091669a9bbf7b1e776446fe358d5996.jpeg" -o images/desert.jpeg
+          curl -fsSL "https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/d0bf10d20f5cbd85473ff876708db759b64a61e61e25b62201db095f1fb469a9.jpeg" -o images/forest.jpeg
+          curl -fsSL "https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/6ce0931b21233e635d8589ded040f0c232838e6b190d356a0c89a108cdb57c9f.jpeg" -o images/settlement.jpeg
+          echo "All images downloaded:"
+          ls -lh images/
+
+      - name: Update image URLs in HTML and CSS
+        run: |
+          python3 << 'PYEOF'
+          base = 'https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/'
+          replacements = {
+              base + 'ef6a0f78f2f73b683f041bdffd684a67d170929a7137401cb8bf1079c7adb08c.jpeg': 'images/hero_bg.jpeg',
+              base + 'b58f5b63f29b9751d5706847c66da61217c9d3ec94710fbbd624317c6c0247fd.jpeg': 'images/map.jpeg',
+              base + '006f1f993f32c9dba44aa75c8c10a5430c2ae72ebb7b95cb70d9fe57445b0fcb.jpeg': 'images/compass.jpeg',
+              base + 'eced1915c43a398f8a4c7699cf6230afa1d42de7b9a325a3b54078dcf8881efb.jpeg': 'images/quill.jpeg',
+              base + 'ff99fdfe02e948f9cced8daa1744150a0fb570305b22b9093488d68459040fc4.jpeg': 'images/mountains.jpeg',
+              base + 'bc645e1e4df425d30c407cf0cf779fac6091669a9bbf7b1e776446fe358d5996.jpeg': 'images/desert.jpeg',
+              base + 'd0bf10d20f5cbd85473ff876708db759b64a61e61e25b62201db095f1fb469a9.jpeg': 'images/forest.jpeg',
+              base + '6ce0931b21233e635d8589ded040f0c232838e6b190d356a0c89a108cdb57c9f.jpeg': 'images/settlement.jpeg',
+          }
+          for fname in ['index.html', 'styles.css']:
+              with open(fname) as f:
+                  content = f.read()
+              for old, new in replacements.items():
+                  count = content.count(old)
+                  content = content.replace(old, new)
+                  if count:
+                      print(f'{fname}: replaced {new} ({count}x)')
+              with open(fname, 'w') as f:
+                  f.write(content)
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add images/ index.html styles.css
+          if git diff --staged --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Host all images in repo"
+            git push
+            echo "Committed and pushed successfully"
+          fi
