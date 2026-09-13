@@ -27,7 +27,7 @@ body {
   line-height: 1.75;
   overflow-x: hidden;
   /* Vintage map as fixed page background */
-  background-image: url('https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/b58f5b63f29b9751d5706847c66da61217c9d3ec94710fbbd624317c6c0247fd.jpeg');
+  background-image: url('images/map.jpeg');
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -109,7 +109,7 @@ ul { list-style: none; }
   text-align: center;
   overflow: hidden;
   /* Background image */
-  background-image: url('https://static.prod-images.emergentagent.com/jobs/45b82404-b0f5-435c-ae9c-db2a3ade3ea0/images/ef6a0f78f2f73b683f041bdffd684a67d170929a7137401cb8bf1079c7adb08c.jpeg');
+  background-image: url('images/hero_bg.jpeg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
